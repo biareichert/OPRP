@@ -2,6 +2,7 @@
 #include <iostream>
 #include <stdlib.h>
 #include <stdio.h>
+#include <time.h>
 using namespace std;
 
 //http://mathworld.wolfram.com/KnightsProblem.html
@@ -10,7 +11,8 @@ using namespace std;
 k is the number of knights to be placed on board
 count is the number of possible solutions */
 int m, n, k;
-int count = 0;
+//int count = 0;
+clock_t tempo_inicial, tempo_final;
 
 /* Essa função preenche as casas do tabuleiro com "_" */
 void makeBoard(char** board){
@@ -54,12 +56,9 @@ void displayBoardCoordenatesMatrix(char** board){
 void displayResult(char** board){
 	for (int i = 0; i < m; i++) {
 		for (int j = 0; j < n; j++) {
-			if (board[i][j] == 'K') {
-				cout << "K" << (i*m)+(j+1) << ";" ;
-			}
-			if (board[i][j] == 'Q') {
-				cout << "Q" << (i*m)+(j+1) << ";" ;
-			}
+			if (board[i][j] == 'K' || board[i][j] == 'Q') {
+				cout << board[i][j] << (i*m)+(j+1) << ";" ;
+			}			
 		}
 	}
 	cout << endl;
@@ -88,28 +87,28 @@ void attack(int i, int j, char a, char** board){
 	/* Condições para garantir que o bloco a ser verificado esteja dentro do tabuleiro
     void displayBoardCoordenatesMatrix(char** board, char a) */
 	
-    if ((i + 2) < m && (j - 1) >= 0) {
+    if ((i + 2) < m && (j - 1) >= 0) { /*baixo 2 esquerda 1*/
 		board[i + 2][j - 1] = a;
 	}
-	if ((i - 2) >= 0 && (j - 1) >= 0) {
+	if ((i - 2) >= 0 && (j - 1) >= 0) { /*cima 2 esquerda 1*/
 		board[i - 2][j - 1] = a;
 	}
-	if ((i + 2) < m && (j + 1) < n) {
+	if ((i + 2) < m && (j + 1) < n) { /* baixo 2 direita 1*/
 		board[i + 2][j + 1] = a;
 	}
-	if ((i - 2) >= 0 && (j + 1) < n) {
+	if ((i - 2) >= 0 && (j + 1) < n) { /* cima 2 direita 1*/
 		board[i - 2][j + 1] = a;
 	}
-	if ((i + 1) < m && (j + 2) < n) {
+	if ((i + 1) < m && (j + 2) < n) { /* baixo 1 direita 2 */
 		board[i + 1][j + 2] = a;
 	}
-	if ((i - 1) >= 0 && (j + 2) < n) {
+	if ((i - 1) >= 0 && (j + 2) < n) { /* cima 1 direita 2 */
 		board[i - 1][j + 2] = a;
 	}
-	if ((i + 1) < m && (j - 2) >= 0) {
+	if ((i + 1) < m && (j - 2) >= 0) { /* baixo 1 esquerda 2 */
 		board[i + 1][j - 2] = a;
 	}
-	if ((i - 1) >= 0 && (j - 2) >= 0) {
+	if ((i - 1) >= 0 && (j - 2) >= 0) { /*cima 1 esquerda 2*/
 		board[i - 1][j - 2] = a;
 	}
 }
@@ -122,11 +121,12 @@ int attackqueens(int oi, int oj, char a, char** board){
 	i = oi;
 	j = oj;
 	while ((i > 0) && (j > 0)) {
-		if ((board[i-1][j-1] != 'K') || (board[i-1][j-1] != 'A') || (board[i-1][j-1] != 'Q') || (board[i-1][j-1] != 'q')){
-			//board[i-1][j-1] = a;
+		//if ((board[i-1][j-1] != 'K') || (board[i-1][j-1] != 'A') || (board[i-1][j-1] != 'Q') || (board[i-1][j-1] != 'q')){
+		if ((board[i-1][j-1] != 'K') || (board[i-1][j-1] != 'A') || (board[i-1][j-1] != 'Q')){
+			
 			if ((board[i-1][j-1] == 'K')) {
 				return(1);
-				} else {
+			} else {
 				board[i-1][j-1] = a;
 			}
 		}
@@ -138,11 +138,9 @@ int attackqueens(int oi, int oj, char a, char** board){
 	i = oi;
 	j = oj;
 	while (i > 0) {
-		if (board[i-1][j] == 'Q') {
+		if (board[i-1][j] == 'Q' || board[i-1][j] == 'K') {
 			return(1);
-		}
-		if (board[i-1][j] == 'K') {
-			return(1);
+		
 		} else {
 			board[i-1][j] = a;
 		}
@@ -153,12 +151,9 @@ int attackqueens(int oi, int oj, char a, char** board){
 	i = oi;
 	j = oj;
 	while ((i > 0) && (j < n)) {
-		if (board[i-1][j+1] == 'Q') {
+		if (board[i-1][j+1] == 'Q' || board[i-1][j+1] == 'K') {
 			return(1);
-		}
-		if (board[i-1][j+1] == 'K') {
-			return(1);
-		} else {
+		}else {
 			board[i-1][j+1] = a;
 		}
 		i--;
@@ -169,12 +164,9 @@ int attackqueens(int oi, int oj, char a, char** board){
 	i = oi;
 	j = oj;
 	while (j > 0) {
-		if (board[i][j-1] == 'Q') {
+		if (board[i][j-1] == 'Q' || board[i][j-1] == 'K') {
 			return(1);
-		}
-		if (board[i][j-1] == 'K') {
-			return(1);
-		} else {
+		}else {
 				board[i][j-1] = a;
 		}
 		j--;
@@ -184,12 +176,9 @@ int attackqueens(int oi, int oj, char a, char** board){
 	i = oi;
 	j = oj;
 	while (j+1 < n) {
-		if (board[i][j+1] == 'Q') {
+		if (board[i][j+1] == 'Q' || board[i][j+1] == 'K') {
 			return(1);
-		}
-		if (board[i][j+1] == 'K') {
-			return(1);
-		} else {
+		}else {
 		   board[i][j+1] = a;
 	    }
 		j++;
@@ -199,12 +188,9 @@ int attackqueens(int oi, int oj, char a, char** board){
 	i = oi;
 	j = oj;
 	while ((i+1 < m) && (j > 0)) {
-		if (board[i+1][j-1] == 'Q') {
+		if (board[i+1][j-1] == 'Q' || board[i+1][j-1] == 'K') {
 			return(1);
-		}
-		if (board[i+1][j-1] == 'K') {
-			return(1);
-		} else {
+		}else {
 		   board[i+1][j-1] = a;
 		}
 		i++;
@@ -215,12 +201,9 @@ int attackqueens(int oi, int oj, char a, char** board){
 	i = oi;
 	j = oj;
 	while (i+1 < m) {
-		if (board[i+1][j] == 'Q') {
+		if (board[i+1][j] == 'Q' || board[i+1][j] == 'K') {
 			return(1);
-		}
-		if (board[i+1][j] == 'K') {
-			return(1);
-		} else {
+		}else {
 		   board[i+1][j] = a;
 		}
 		i++;
@@ -230,12 +213,9 @@ int attackqueens(int oi, int oj, char a, char** board){
 	i = oi;
 	j = oj;
 	while ((i+1 < m) && (j+1 < n)) {
-		if (board[i+1][j+1] == 'Q') {
+		if (board[i+1][j+1] == 'Q' || board[i+1][j+1] == 'K') {
 			return(1);
-		}
-		if (board[i+1][j+1] == 'K') {
-			return(1);
-		} else {
+		}else {
 			board[i+1][j+1] = a;
 		}
 		i++;
@@ -306,8 +286,7 @@ void queens (int qui, int quj, char ** board) {
 					}
 					//displayBoard(board);
 
-					/* Delete the new board
-					to free up the memory */
+					/* Deleta o novo tabuleiro*/
 					for (int x = 0; x < m; x++) {
 						delete[] new_board[x];
                     }
@@ -326,9 +305,11 @@ void kkn(int k, int sti, int stj, char** board){
 	if (k == 0) {
 		queens(0,0,board);
 		displayBoardCoordenatesMatrix(board);
+		tempo_final = clock();
+		cout<<"tempo final = "<< (tempo_final - tempo_inicial) / (double)CLOCKS_PER_SEC << endl;
 		displayResult(board);
 		exit (1);
-		count++;
+	//	count++;
 	}
 	else {
 		/* Loop para verificar todas as posições no tabuleiro */
@@ -349,19 +330,22 @@ void kkn(int k, int sti, int stj, char** board){
 					kkn(k - 1, i, j, new_board);
 
 					/* Delete the new board	to free up the memory */
-					for (int x = 0; x < m; x++) {
+					/*for (int x = 0; x < m; x++) {
 						delete[] new_board[x];
 					}
-					delete[] new_board;
+					delete[] new_board; não estava sendo utilizado*/
 				}
 			}
-			stj = 0;
+			//stj = 0; não estava sendo utilizado
 		}
 	}
 }
 
+
 // Main
 int main( int argc, char *argv[]){
+	
+	tempo_inicial = clock();
 
 	if (argc <= 2 ) {
 		printf("./knight <linha_tabuleiro> <nro_cavalos>\n");
@@ -382,7 +366,7 @@ int main( int argc, char *argv[]){
 	makeBoard(board);
 
 	kkn(k, 0, 0, board);
-
+	
 	/*cout << endl
 	<< "Total number of solutions : "
 	<< count << endl;*/
