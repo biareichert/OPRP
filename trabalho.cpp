@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
+#include <algorithm> //para uso do fill
 using namespace std;
 
 //http://mathworld.wolfram.com/KnightsProblem.html
@@ -16,11 +17,14 @@ clock_t tempo_inicial, tempo_final;
 
 /* Essa função preenche as casas do tabuleiro com "_" */
 void makeBoard(char** board){
-	for (int i = 0; i < m; i++) {
+    //Aqui inicializo as posições com '_' com o uso do fill. O tempo de código não alterou muito.
+    fill(*board, *board + m*n, '_');
+	
+	/*for (int i = 0; i < m; i++) {
 		for (int j = 0; j < n; j++) {
 			board[i][j] = '_';
 		}
-	}
+	}*/
 }
 
 /* Imprimir tabuleiro */
@@ -90,25 +94,25 @@ void attack(int i, int j, char a, char** board){
     if ((i + 2) < m && (j - 1) >= 0) { /*baixo 2 esquerda 1*/
 		board[i + 2][j - 1] = a;
 	}
-	if ((i - 2) >= 0 && (j - 1) >= 0) { /*cima 2 esquerda 1*/
+	else if ((i - 2) >= 0 && (j - 1) >= 0) { /*cima 2 esquerda 1*/
 		board[i - 2][j - 1] = a;
 	}
-	if ((i + 2) < m && (j + 1) < n) { /* baixo 2 direita 1*/
+	else if ((i + 2) < m && (j + 1) < n) { /* baixo 2 direita 1*/
 		board[i + 2][j + 1] = a;
 	}
-	if ((i - 2) >= 0 && (j + 1) < n) { /* cima 2 direita 1*/
+	else if ((i - 2) >= 0 && (j + 1) < n) { /* cima 2 direita 1*/
 		board[i - 2][j + 1] = a;
 	}
-	if ((i + 1) < m && (j + 2) < n) { /* baixo 1 direita 2 */
+	else if ((i + 1) < m && (j + 2) < n) { /* baixo 1 direita 2 */
 		board[i + 1][j + 2] = a;
 	}
-	if ((i - 1) >= 0 && (j + 2) < n) { /* cima 1 direita 2 */
+	else if ((i - 1) >= 0 && (j + 2) < n) { /* cima 1 direita 2 */
 		board[i - 1][j + 2] = a;
 	}
-	if ((i + 1) < m && (j - 2) >= 0) { /* baixo 1 esquerda 2 */
+	else if ((i + 1) < m && (j - 2) >= 0) { /* baixo 1 esquerda 2 */
 		board[i + 1][j - 2] = a;
 	}
-	if ((i - 1) >= 0 && (j - 2) >= 0) { /*cima 1 esquerda 2*/
+	else if ((i - 1) >= 0 && (j - 2) >= 0) { /*cima 1 esquerda 2*/
 		board[i - 1][j - 2] = a;
 	}
 }
@@ -121,13 +125,13 @@ int attackqueens(int oi, int oj, char a, char** board){
 	i = oi;
 	j = oj;
 	while ((i > 0) && (j > 0)) {
+        //Não faz mto sentido um "||" nesse caso, será que não seria "&&"?
 		//if ((board[i-1][j-1] != 'K') || (board[i-1][j-1] != 'A') || (board[i-1][j-1] != 'Q') || (board[i-1][j-1] != 'q')){
 		if ((board[i-1][j-1] != 'K') || (board[i-1][j-1] != 'A') || (board[i-1][j-1] != 'Q')){
-			
-			if ((board[i-1][j-1] == 'K')) {
-				return(1);
+			if ((board[i-1][j-1] != 'K')) {
+                board[i-1][j-1] = a;
 			} else {
-				board[i-1][j-1] = a;
+				return(1);				
 			}
 		}
 		i--;
@@ -138,11 +142,10 @@ int attackqueens(int oi, int oj, char a, char** board){
 	i = oi;
 	j = oj;
 	while (i > 0) {
-		if (board[i-1][j] == 'Q' || board[i-1][j] == 'K') {
-			return(1);
-		
+		if (board[i-1][j] != 'Q' && board[i-1][j] != 'K') {
+            board[i-1][j] = a;
 		} else {
-			board[i-1][j] = a;
+			return(1);
 		}
 		i--;
 	}
@@ -151,10 +154,11 @@ int attackqueens(int oi, int oj, char a, char** board){
 	i = oi;
 	j = oj;
 	while ((i > 0) && (j < n)) {
-		if (board[i-1][j+1] == 'Q' || board[i-1][j+1] == 'K') {
-			return(1);
+		if (board[i-1][j+1] != 'Q' && board[i-1][j+1] != 'K') {
+			
+            board[i-1][j+1] = a;
 		}else {
-			board[i-1][j+1] = a;
+			return(1);
 		}
 		i--;
 		j++;
@@ -164,10 +168,10 @@ int attackqueens(int oi, int oj, char a, char** board){
 	i = oi;
 	j = oj;
 	while (j > 0) {
-		if (board[i][j-1] == 'Q' || board[i][j-1] == 'K') {
-			return(1);
+		if (board[i][j-1] != 'Q' && board[i][j-1] != 'K') {
+			board[i][j-1] = a;   
 		}else {
-				board[i][j-1] = a;
+			return(1);	
 		}
 		j--;
 	}
@@ -176,11 +180,12 @@ int attackqueens(int oi, int oj, char a, char** board){
 	i = oi;
 	j = oj;
 	while (j+1 < n) {
-		if (board[i][j+1] == 'Q' || board[i][j+1] == 'K') {
-			return(1);
+		if (board[i][j+1] != 'Q' && board[i][j+1] != 'K') {
+			board[i][j+1] = a;
+           
 		}else {
-		   board[i][j+1] = a;
-	    }
+		    return(1);
+        }
 		j++;
 	}
 
@@ -188,11 +193,12 @@ int attackqueens(int oi, int oj, char a, char** board){
 	i = oi;
 	j = oj;
 	while ((i+1 < m) && (j > 0)) {
-		if (board[i+1][j-1] == 'Q' || board[i+1][j-1] == 'K') {
-			return(1);
+		if (board[i+1][j-1] != 'Q' && board[i+1][j-1] != 'K') {
+			board[i+1][j-1] = a;
 		}else {
-		   board[i+1][j-1] = a;
-		}
+		   
+            return(1);
+        }
 		i++;
 		j--;
 	}
@@ -201,11 +207,11 @@ int attackqueens(int oi, int oj, char a, char** board){
 	i = oi;
 	j = oj;
 	while (i+1 < m) {
-		if (board[i+1][j] == 'Q' || board[i+1][j] == 'K') {
-			return(1);
+		if (board[i+1][j] != 'Q' && board[i+1][j] != 'K') {
+			board[i+1][j] = a;
 		}else {
-		   board[i+1][j] = a;
-		}
+		    return(1);
+        }
 		i++;
 	}
 
@@ -213,11 +219,18 @@ int attackqueens(int oi, int oj, char a, char** board){
 	i = oi;
 	j = oj;
 	while ((i+1 < m) && (j+1 < n)) {
-		if (board[i+1][j+1] == 'Q' || board[i+1][j+1] == 'K') {
+		/* antes da inversão para o if possuir a maior ocorrência
+        if (board[i+1][j+1] != 'Q' && board[i+1][j+1] != 'K') {
 			return(1);
 		}else {
 			board[i+1][j+1] = a;
 		}
+        */
+        if (board[i+1][j+1] != 'Q' && board[i+1][j+1] != 'K') {
+			board[i+1][j+1] = a;
+		}else {
+            return(1);
+        }
 		i++;
 		j++;
 	}
@@ -228,9 +241,9 @@ int attackqueens(int oi, int oj, char a, char** board){
 /* Verifica se a posição está vazia para colocar o cavaleiro */
 bool canPlace(int i, int j, char** board){
 	if (board[i][j] == '_')
-	return true;
+	    return true;
 	else
-	return false;
+	    return false;
 }
 
 /* Coloca o cavaleiro na posição [i][j] no tabuleiro */
@@ -358,7 +371,7 @@ int main( int argc, char *argv[]){
 
 	/* Criando um tabuleiro m*n */
 	char** board = new char*[m];
-	for (int i = 0; i < m; i++) {
+    for (int i = 0; i < m; i++) {
 		board[i] = new char[n];
 	}
                 
