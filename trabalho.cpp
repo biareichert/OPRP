@@ -18,13 +18,13 @@ clock_t tempo_inicial, tempo_final;
 /* Essa função preenche as casas do tabuleiro com "_" */
 void makeBoard(char** board){
     //Aqui inicializo as posições com '_' com o uso do fill. O tempo de código não alterou muito.
-    fill(*board, *board + m*n, '_');
+    //fill(*board, *board + m*n, '_');
 	
-	/*for (int i = 0; i < m; i++) {
+	for (int i = 0; i < m; i++) {
 		for (int j = 0; j < n; j++) {
 			board[i][j] = '_';
 		}
-	}*/
+	}
 }
 
 /* Imprimir tabuleiro */
@@ -94,25 +94,25 @@ void attack(int i, int j, char a, char** board){
     if ((i + 2) < m && (j - 1) >= 0) { /*baixo 2 esquerda 1*/
 		board[i + 2][j - 1] = a;
 	}
-	else if ((i - 2) >= 0 && (j - 1) >= 0) { /*cima 2 esquerda 1*/
+	if ((i - 2) >= 0 && (j - 1) >= 0) { /*cima 2 esquerda 1*/
 		board[i - 2][j - 1] = a;
 	}
-	else if ((i + 2) < m && (j + 1) < n) { /* baixo 2 direita 1*/
+	if ((i + 2) < m && (j + 1) < n) { /* baixo 2 direita 1*/
 		board[i + 2][j + 1] = a;
 	}
-	else if ((i - 2) >= 0 && (j + 1) < n) { /* cima 2 direita 1*/
+	if ((i - 2) >= 0 && (j + 1) < n) { /* cima 2 direita 1*/
 		board[i - 2][j + 1] = a;
 	}
-	else if ((i + 1) < m && (j + 2) < n) { /* baixo 1 direita 2 */
+	if ((i + 1) < m && (j + 2) < n) { /* baixo 1 direita 2 */
 		board[i + 1][j + 2] = a;
 	}
-	else if ((i - 1) >= 0 && (j + 2) < n) { /* cima 1 direita 2 */
+	if ((i - 1) >= 0 && (j + 2) < n) { /* cima 1 direita 2 */
 		board[i - 1][j + 2] = a;
 	}
-	else if ((i + 1) < m && (j - 2) >= 0) { /* baixo 1 esquerda 2 */
+	if ((i + 1) < m && (j - 2) >= 0) { /* baixo 1 esquerda 2 */
 		board[i + 1][j - 2] = a;
 	}
-	else if ((i - 1) >= 0 && (j - 2) >= 0) { /*cima 1 esquerda 2*/
+	if ((i - 1) >= 0 && (j - 2) >= 0) { /*cima 1 esquerda 2*/
 		board[i - 1][j - 2] = a;
 	}
 }
@@ -349,7 +349,7 @@ void kkn(int k, int sti, int stj, char** board){
 					delete[] new_board; não estava sendo utilizado*/
 				}
 			}
-			//stj = 0; não estava sendo utilizado
+			stj = 0;
 		}
 	}
 }
