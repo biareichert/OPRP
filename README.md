@@ -2,4 +2,4 @@ Trabalho relacionado a disciplina de Programação Paralela do Curso Bacharelado
 
 Equipe: Beatriz e Geremias.
 
-Tentativa de solução para o Knights Problem.
+Tentativa de solução para o Knight & Queen Problem.
